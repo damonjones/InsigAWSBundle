@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="insig_aws.client.secret_access_key">SECRET_ACCESS_KEY</parameter>
+        <parameter key="insig_aws.client.access_key_id">ACCESS_KEY_ID</parameter>
+    </parameters>
+
+    <services>
+        <service id="insig_aws.client" class="Insig\AWSBundle\Client">
+            <argument>%insig_aws.client.secret_access_key%</argument>
+            <argument>%insig_aws.client.access_key_id%</argument>
+        </service>
+    </services>
+
+</container>
