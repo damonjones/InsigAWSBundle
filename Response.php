@@ -39,6 +39,13 @@ class Response
         }
 
         // Check for an error and throw an exception
+        if (isset($xml->ItemLookupErrorResponse)) {
+            throw new AWSException(
+                (string) $xml->ItemLookupErrorResponse->Message,
+                (int) $xml->ItemLookupErrorResponse->Code
+            );
+        }
+
         if (isset($xml->Items->Request->Errors)) {
             throw new AWSException(
                 (string) $xml->Items->Request->Errors->Error->Message,
