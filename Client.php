@@ -91,7 +91,12 @@ class Client
     public function setCountryCode($countryCode = null)
     {
         if (!$countryCode || !in_array($countryCode, self::$countryCodes)) {
-            throw new AWSException(sprintf('Country code [%s] is invalid.', $countryCode));
+            throw new AWSException(
+                sprintf(
+                    'Country code [%s] is invalid.',
+                    $countryCode
+                )
+            );
         }
 
         $this->countryCode = $countryCode;
@@ -129,7 +134,10 @@ class Client
             'Timestamp'       =>  gmdate('Y-m-d\TH:i:s\Z'),
             'Version'         =>  self::VERSION
         );
-        $queryParameters = array_merge($defaultQueryParameters, $requestQueryParameters);
+        $queryParameters = array_merge(
+            $defaultQueryParameters,
+            $requestQueryParameters
+        );
         ksort($queryParameters);
 
         $arr = array();
@@ -140,9 +148,31 @@ class Client
         }
         $queryString = implode('&', $kvpairs);
         $url = self::$domains[$this->countryCode];
-        $requestString = sprintf("GET\n%s\n/onca/xml\n%s", $url, $queryString);
-        $signature = str_replace('%7E', '~', rawurlencode(base64_encode(hash_hmac('sha256', $requestString, $this->secretAccessKey, true))));
-        $signedRequestURL = sprintf('http://%s/onca/xml?%s&Signature=%s', $url, $queryString, $signature);
+        $requestString = sprintf(
+            "GET\n%s\n/onca/xml\n%s",
+            $url,
+            $queryString
+        );
+        $signature = str_replace(
+            '%7E',
+            '~',
+            rawurlencode(
+                base64_encode(
+                    hash_hmac(
+                        'sha256',
+                        $requestString,
+                        $this->secretAccessKey,
+                        true
+                    )
+                )
+            )
+        );
+        $signedRequestURL = sprintf(
+            'http://%s/onca/xml?%s&Signature=%s',
+            $url,
+            $queryString,
+            $signature
+        );
 
         return $signedRequestURL;
     }
@@ -156,7 +186,9 @@ class Client
      */
     public function execute(Request $request)
     {
-        $signedRequestURL = $this->getSignedRequestURL($request->getParameters());
+        $signedRequestURL = $this->getSignedRequestURL(
+            $request->getParameters()
+        );
 
         try {
             $data = file_get_contents($signedRequestURL);

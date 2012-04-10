@@ -69,7 +69,10 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSignedRequestURLThrowsExceptionWithoutRequestParameters()
     {
-        $method = new \ReflectionMethod('Insig\AWSBundle\Client', 'getSignedRequestURL');
+        $method = new \ReflectionMethod(
+            'Insig\AWSBundle\Client',
+            'getSignedRequestURL'
+        );
         $method->setAccessible(true);
         $method->invoke($this->object);
     }
@@ -79,12 +82,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSignedRequestURL()
     {
-        $method = new \ReflectionMethod('Insig\AWSBundle\Client', 'getSignedRequestURL');
+        $method = new \ReflectionMethod(
+            'Insig\AWSBundle\Client',
+            'getSignedRequestURL'
+        );
         $method->setAccessible(true);
         $request = new Request;
         $timestamp = gmdate('Y-m-d\TH:i:s\Z');
-        $signedRequestURL = $method->invoke($this->object, $request->getParameters());
-        $this->assertRegExp('/^http:\/\/ecs\.amazonaws\.com\/onca\/xml\?AWSAccessKeyId=ACCESS_KEY_ID&MerchantId=All&ResponseGroup=Small&Service=AWSECommerceService&Timestamp=' . urlencode($timestamp) . '+&Version=2010-11-01&Signature=[\w\d%]+/', $signedRequestURL);
+        $signedRequestURL = $method->invoke(
+            $this->object,
+            $request->getParameters()
+        );
+        $this->assertRegExp(
+            '/^http:\/\/ecs\.amazonaws\.com\/onca\/xml\?AWSAccessKeyId=' .
+            'ACCESS_KEY_ID&MerchantId=All&ResponseGroup=Small&Service=' .
+            'AWSECommerceService&Timestamp=' . urlencode($timestamp) .
+            '+&Version=2010-11-01&Signature=[\w\d%]+/', $signedRequestURL
+        );
     }
 
     public function testExecute()

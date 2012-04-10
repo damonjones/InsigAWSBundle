@@ -102,14 +102,23 @@ class Request
     {
         if (is_string($responseGroups)) {
             // remove unwanted characters
-            $responseGroups = trim(preg_replace('/[^a-zA-Z,]/', '', $responseGroups), ',');
+            $responseGroups = trim(
+                preg_replace(
+                    '/[^a-zA-Z,]/',
+                    '',
+                    $responseGroups
+                ),
+                ','
+            );
             // create an array
             $responseGroups = explode(',', $responseGroups);
         } elseif (is_array($responseGroups)) {
             // remove unwanted characters
             array_walk(
                 $responseGroups,
-                function(&$value) { $value = preg_replace('/[^a-zA-Z,]/', '', $value); }
+                function(&$value) {
+                    $value = preg_replace('/[^a-zA-Z,]/', '', $value);
+                }
             );
         }
 
