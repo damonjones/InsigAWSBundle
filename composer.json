@@ -1,0 +1,23 @@
+{
+    "name": "damonjones/insig-aws-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony InsigAWSBundle",
+    "keywords": ["Amazon Product API"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Damon Jones",
+            "email": "damon@insig.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/validator": "2.0.x"
+    },
+    "autoload": {
+        "psr-0": {
+            "Insig\\AWSBundle": ""
+        }
+    },
+    "target-dir": "Insig/AWSBundle"
+}
