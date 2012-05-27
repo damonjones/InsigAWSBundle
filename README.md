@@ -15,6 +15,7 @@ Client Configuration
 -------------
 
 Add your account credentials to your app/config/config.yml (or a configuration file included by it):
+
     insig_aws:
         client:
             access_key_id:     ACCESS_KEY_ID
