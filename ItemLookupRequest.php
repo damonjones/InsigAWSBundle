@@ -11,6 +11,11 @@
 
 namespace Insig\AWSBundle;
 
+use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
+use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
+use Symfony\Component\Validator\ConstraintValidatorFactory;
+
 use Insig\AWSBundle\Exception as AWSException,
     Insig\AWSBundle\Validator\UpcEanValidator,
     Insig\AWSBundle\Validator\UpcEan
@@ -65,8 +70,13 @@ class ItemLookupRequest extends Request
             throw new AWSException('UPC/EAN is required.');
         }
 
-        $validator = new UpcEanValidator;
-        if (!$validator->isValid($upc, new UpcEan)) {
+        $validator = new Validator(
+            new ClassMetadataFactory(new StaticMethodLoader()),
+            new ConstraintValidatorFactory()
+        );
+
+        $violations = $validator->validateValue($upc, new UpcEan);
+        if (count($violations)) {
             throw new \InvalidArgumentException(sprintf('UPC/EAN is invalid (%s).', $upc));
         }
 

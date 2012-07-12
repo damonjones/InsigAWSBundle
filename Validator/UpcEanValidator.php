@@ -18,16 +18,16 @@ use Symfony\Component\Validator\Constraint,
 
 class UpcEanValidator extends ConstraintValidator
 {
-    public function isValid($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
         if (!is_string($value)) {
             throw new UnexpectedTypeException($value, 'string');
         }
 
         if (!preg_match('/^\d{12,13}$/', $value)) {
-            $this->setMessage($constraint->message, array('{{ value }}' => $value));
+            $this->context->addViolation($constraint->message, array('{{ value }}' => $value));
 
-            return false;
+            return;
         }
 
         $lastDigit = strlen($value) - 1;
@@ -49,11 +49,9 @@ class UpcEanValidator extends ConstraintValidator
         $checksum = (10 - ($accumulator % 10)) % 10;
 
         if ($checksum !== $checkDigit) {
-            $this->setMessage($constraint->message, array('{{ value }}' => $value));
+            $this->context->addViolation($constraint->message, array('{{ value }}' => $value));
 
-            return false;
+            return;
         }
-
-        return true;
     }
 }

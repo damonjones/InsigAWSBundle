@@ -11,13 +11,17 @@
 
 namespace Insig\AWSBundle\Tests\Validator;
 
+use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
+use Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader;
+use Symfony\Component\Validator\ConstraintValidatorFactory;
+
 use \Insig\AWSBundle\Validator\UpcEan,
     \Insig\AWSBundle\Validator\UpcEanValidator
     ;
 
 class UpcEanValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     protected $validator;
     protected $validatorConstraint;
 
@@ -47,7 +51,10 @@ class UpcEanValidatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->validator = new UpcEanValidator;
+        $this->validator = new Validator(
+            new ClassMetadataFactory(new StaticMethodLoader()),
+            new ConstraintValidatorFactory()
+        );
         $this->validatorConstraint = new UpcEan;
     }
 
@@ -58,7 +65,8 @@ class UpcEanValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsValid($upcean, $isValid)
     {
-        $this->assertSame($isValid, $this->validator->isValid($upcean, $this->validatorConstraint));
+        $violations = $this->validator->validateValue($upcean, $this->validatorConstraint);
+        $this->assertSame($isValid, 0 === count($violations));
     }
 
     /**
@@ -68,6 +76,6 @@ class UpcEanValidatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testIllegalTypeThrowsException($upcean)
     {
-        $this->validator->isValid($upcean, $this->validatorConstraint);
+        $violations = $this->validator->validateValue($upcean, $this->validatorConstraint);
     }
 }
